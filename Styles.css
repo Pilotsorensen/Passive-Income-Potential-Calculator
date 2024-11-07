@@ -7,27 +7,29 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100vh; /* Full height of the screen */
 }
 
 /* Container for the form */
 .container {
-    width: 90%;
-    max-width: 800px;
+    width: 100%;
+    max-width: 800px;            /* Limits the width of the calculator */
+    padding: 40px;               /* Adds padding around the content */
     background-color: white;
-    padding: 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    border-top: 10px solid #4CAF50; /* Green border at top */
+    border-radius: 10px;         /* Rounded corners */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    margin: 20px;                /* Adds space around the container */
+    border-top: 15px solid #4CAF50; /* Thicker green bar at the top */
 }
 
 /* Heading styles */
 h1 {
     text-align: center;
     color: #333;
+    margin-bottom: 30px;         /* Space below the heading */
 }
 
-/* Form element styles */
+/* Label styles for form elements */
 label {
     display: block;
     margin-top: 15px;
@@ -35,11 +37,11 @@ label {
     color: #555;
 }
 
-/* Input, select, and button styles */
+/* Styles for input fields, dropdowns, and buttons */
 input, select, button {
     width: 100%;
-    padding: 10px;
-    margin-top: 5px;
+    padding: 12px;               /* Increased padding for better readability */
+    margin-top: 10px;
     font-size: 14px;
     border-radius: 5px;
     border: 1px solid #ddd;
@@ -52,6 +54,7 @@ button {
     border: none;
     cursor: pointer;
     margin-top: 20px;
+    font-weight: bold;
 }
 
 button:hover {
@@ -75,6 +78,8 @@ button:hover {
 footer {
     margin-top: 30px;
     text-align: center;
+    font-size: 14px;
+    color: #333;
 }
 
 /* Ensure page is responsive */
