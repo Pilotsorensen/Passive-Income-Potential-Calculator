@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Passive Income Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,30 +12,30 @@
     <div class="container">
         <h1>Passive Income Calculator</h1>
 
-        <!-- Income Stream Selection -->
-        <label for="investment">Investment Amount ($):</label>
-        <input type="number" id="investment" placeholder="Enter investment amount" />
+        <label for="investment">Initial Investment ($):</label>
+        <input type="number" id="investment" placeholder="Enter initial investment amount" />
 
         <label for="incomeStream">Choose Your Income Stream:</label>
         <select id="incomeStream">
-            <option value="realEstate">Real Estate</option>
-            <option value="stocks">Stocks/Dividends</option>
-            <option value="digitalProducts">Digital Products</option>
+            <option value="rentalProperties">Rental Properties (5% ROI)</option>
+            <option value="stockMarket">Stock Market Investments (7% ROI)</option>
+            <option value="onlineBusinesses">Online Businesses (10% ROI)</option>
         </select>
 
         <label for="involvement">Level of Involvement:</label>
         <select id="involvement">
-            <option value="low">Low Involvement</option>
-            <option value="medium">Medium Involvement</option>
-            <option value="high">High Involvement</option>
+            <option value="handsOff">Hands-off (Low Time Commitment)</option>
+            <option value="moderate">Moderate Involvement (Medium Time Commitment)</option>
+            <option value="active">Active Involvement (High Time Commitment)</option>
         </select>
 
         <button onclick="calculateIncome()">Calculate</button>
 
-        <!-- Result Display -->
         <div id="result"></div>
 
-        <!-- Footer -->
+        <h3>Projected Growth Over the Next 20 Years</h3>
+        <canvas id="incomeChart" width="400" height="200"></canvas>
+
         <footer>
             <p>Want more tips? <a href="https://www.yoursite.com">Visit our blog</a>!</p>
         </footer>
