@@ -36,35 +36,35 @@ function calculateIncome() {
 
     // Calculate the projected values over the selected timeframe
     const values = [];
-    let labels = [];
+    const labels = [];
     
     if (timeframe > 5) {
-        // Generate yearly labels and values if timeframe is above 5 years
+        // Generate yearly values and labels
         for (let year = 1; year <= timeframe; year++) {
             const futureValue = investment * Math.pow(1 + effectiveRoi, year);
             values.push(futureValue);
-            labels.push(year); // Label by year
+            labels.push(`${year}`); // Label by year
         }
     } else {
-        // Generate monthly labels and values if timeframe is 5 years or below
+        // Generate monthly values and labels
         for (let month = 1; month <= timeframe * 12; month++) {
             const futureValue = investment * Math.pow(1 + effectiveRoi / 12, month);
             values.push(futureValue);
-            labels.push(month); // Label by month
+            labels.push(`Month ${month}`); // Label by month
         }
     }
 
-    // Format final projected value
+    // Format the final projected value for display
     const formattedValue = values[values.length - 1].toLocaleString('en-US');
 
     // Display the result
     document.getElementById('result').innerHTML = `Your investment will grow to <strong>$${formattedValue}</strong> in ${timeframe} years.`;
 
     // Update the chart with calculated values and labels
-    updateChart(labels, values);
+    updateChart(labels, values, timeframe);
 }
 
-function updateChart(labels, values) {
+function updateChart(labels, values, timeframe) {
     const ctx = document.getElementById('incomeChart').getContext('2d');
 
     // Destroy previous chart instance if it exists
@@ -72,7 +72,7 @@ function updateChart(labels, values) {
         window.chart.destroy();
     }
 
-    // Create new chart with the updated data
+    // Create a new chart with updated data
     window.chart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -91,23 +91,9 @@ function updateChart(labels, values) {
                 x: {
                     title: {
                         display: true,
-                        text: labels.length > 60 ? 'Years' : 'Months'
+                        text: timeframe > 5 ? 'Years' : 'Months'
                     },
                     ticks: {
                         callback: function(value, index) {
-                            // Show only select labels for readability
-                            return labels.length > 60 ? labels[index] : (index % 12 === 0 ? labels[index] : '');
-                        }
-                    }
-                },
-                y: {
-                    ticks: {
-                        callback: function(value) {
-                            return '$' + value.toLocaleString('en-US');
-                        }
-                    }
-                }
-            }
-        }
-    });
-}
+                            // Show selected labels only for readability
+                            return timeframe > 5 || index % 12 
