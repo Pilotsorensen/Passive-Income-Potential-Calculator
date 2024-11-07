@@ -11,7 +11,7 @@ function calculateIncome() {
     const involvement = document.getElementById('involvement').value;
 
     if (isNaN(investment) || investment <= 0) {
-        document.getElementById('result').innerHTML = "Please enter a valid initial investment.";
+        alert("Please enter a valid initial investment.");
         return;
     }
 
@@ -47,11 +47,22 @@ function calculateIncome() {
     }
 
     // Display result as the total after 20 years with formatted number
-    document.getElementById('result').innerHTML = `After 20 years, your investment will grow to $${formatNumber(currentAmount.toFixed(2))}.`;
+    const formattedAmount = formatNumber(currentAmount.toFixed(2));  // Format the amount
+    const resultText = `After 20 years, your investment will grow to $${formattedAmount}.`;
+    document.getElementById('result').innerHTML = resultText;
+
+    // Show the result container (if hidden)
+    document.getElementById('result').style.display = 'block';
 
     // Generate the graph using Chart.js
     const ctx = document.getElementById('incomeChart').getContext('2d');
-    new Chart(ctx, {
+    
+    // Clear the previous chart before adding the new one
+    if (window.incomeChart) {
+        window.incomeChart.destroy();
+    }
+
+    window.incomeChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: Array.from({ length: 20 }, (_, i) => i + 1),  // 20 years (labels 1 to 20)
@@ -104,7 +115,5 @@ function calculateIncome() {
     });
 }
 
-// Event listeners to update the result and graph dynamically when input changes
-document.getElementById('investment').addEventListener('input', calculateIncome);
-document.getElementById('incomeStream').addEventListener('change', calculateIncome);
-document.getElementById('involvement').addEventListener('change', calculateIncome);
+// Event listener for the "Calculate" button
+document.getElementById('calculateButton').addEventListener('click', calculateIncome);
