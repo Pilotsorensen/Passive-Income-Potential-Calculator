@@ -7,26 +7,26 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100vh; /* Full height of the screen */
 }
 
 /* Container for the form */
 .container {
     width: 100%;
-    max-width: 800px;
-    padding: 40px;
+    max-width: 800px;   /* Limits the width of the calculator */
+    padding: 40px;      /* Adds padding around the content */
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    margin: 20px;
-    border-top: 12px solid #4CAF50; /* Thicker green top border */
+    margin: 20px;       /* Adds space around the container */
+    border-top: 15px solid #4CAF50; /* Larger top border with more thickness */
 }
 
 /* Heading styles */
 h1 {
     text-align: center;
     color: #333;
-    margin-bottom: 30px;
+    margin-bottom: 30px; /* Space below the heading */
 }
 
 /* Form element styles */
@@ -40,7 +40,7 @@ label {
 /* Input, select, and button styles */
 input, select, button {
     width: 100%;
-    padding: 12px;
+    padding: 12px;  /* Increased padding for better readability */
     margin-top: 10px;
     font-size: 14px;
     border-radius: 5px;
