@@ -1,119 +1,75 @@
-// Function to format numbers with spaces between thousands
+// Function to format numbers with spaces (e.g., 1 000 000)
 function formatNumber(num) {
-    return num.toLocaleString('en', { useGrouping: true });
+    return num.toLocaleString('en-US');
 }
 
-// Function to calculate passive income and generate graph
+// Function to calculate passive income
 function calculateIncome() {
-    // Get the user input values
-    const investment = parseFloat(document.getElementById('investment').value);
+    const investmentAmount = parseFloat(document.getElementById('investment').value);
     const incomeStream = document.getElementById('incomeStream').value;
-    const involvement = document.getElementById('involvement').value;
+    const involvementLevel = document.getElementById('involvement').value;
 
-    if (isNaN(investment) || investment <= 0) {
-        alert("Please enter a valid initial investment.");
+    if (isNaN(investmentAmount) || investmentAmount <= 0) {
+        alert("Please enter a valid investment amount.");
         return;
     }
 
-    // Define the ROI based on the selected income stream
+    // Determine ROI based on income stream selected
     let roi = 0;
-    if (incomeStream === "rentalProperties") {
-        roi = 0.05;  // 5% ROI for rental properties
-    } else if (incomeStream === "stockMarket") {
-        roi = 0.07;  // 7% ROI for stock market investments
-    } else if (incomeStream === "onlineBusinesses") {
-        roi = 0.10;  // 10% ROI for online businesses
+    if (incomeStream === 'rentalProperties') {
+        roi = 0.05; // 5% ROI
+    } else if (incomeStream === 'stockMarket') {
+        roi = 0.07; // 7% ROI
+    } else if (incomeStream === 'onlineBusinesses') {
+        roi = 0.1;  // 10% ROI
     }
 
-    // Define the involvement factor (affects growth rate)
-    let involvementFactor = 1;
-    if (involvement === "handsOff") {
-        involvementFactor = 1;  // Low involvement, no change to ROI
-    } else if (involvement === "moderate") {
-        involvementFactor = 1.2;  // Moderate involvement, boost ROI slightly
-    } else if (involvement === "active") {
-        involvementFactor = 1.5;  // Active involvement, boost ROI significantly
+    // Adjust ROI based on level of involvement
+    if (involvementLevel === 'moderate') {
+        roi += 0.02;  // +2% for moderate involvement
+    } else if (involvementLevel === 'active') {
+        roi += 0.05;  // +5% for active involvement
     }
 
-    // Calculate the adjusted ROI
-    const adjustedRoi = roi * involvementFactor;
+    // Calculate projected income for the next 20 years
+    let years = 20;
+    let projectedValues = [];
+    let currentValue = investmentAmount;
 
-    // Prepare the data for the graph (20 years)
-    let yearlyProjections = [];
-    let currentAmount = investment;
-    for (let year = 1; year <= 20; year++) {
-        currentAmount += currentAmount * adjustedRoi;
-        yearlyProjections.push(currentAmount);
+    for (let i = 1; i <= years; i++) {
+        currentValue += currentValue * roi; // Compound growth
+        projectedValues.push(currentValue);
     }
 
-    // Display result as the total after 20 years with formatted number
-    const formattedAmount = formatNumber(currentAmount.toFixed(2));  // Format the amount
-    const resultText = `After 20 years, your investment will grow to $${formattedAmount}.`;
-    document.getElementById('result').innerHTML = resultText;
+    // Update result text with formatted numbers
+    document.getElementById('result').innerHTML = `Your investment will grow to $${formatNumber(currentValue.toFixed(2))} in 20 years.`;
+    document.getElementById('result').style.display = "block"; // Show the result
 
-    // Show the result container (if hidden)
-    document.getElementById('result').style.display = 'block';
-
-    // Generate the graph using Chart.js
+    // Update the chart
     const ctx = document.getElementById('incomeChart').getContext('2d');
-    
-    // Clear the previous chart before adding the new one
-    if (window.incomeChart) {
-        window.incomeChart.destroy();
-    }
-
-    window.incomeChart = new Chart(ctx, {
+    const incomeChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: Array.from({ length: 20 }, (_, i) => i + 1),  // 20 years (labels 1 to 20)
+            labels: Array.from({ length: 20 }, (_, i) => `Year ${i + 1}`), // Labels for years
             datasets: [{
-                label: 'Projected Income',
-                data: yearlyProjections,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                fill: true,
-                tension: 0.4
+                label: 'Projected Growth',
+                data: projectedValues.map(value => value.toFixed(2)),
+                borderColor: '#4CAF50',
+                fill: false,
+                borderWidth: 2
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Years'
-                    }
-                },
                 y: {
-                    title: {
-                        display: true,
-                        text: 'Income ($)'
-                    },
                     ticks: {
                         callback: function(value) {
-                            return formatNumber(value); // Format y-axis values with spaces
+                            return formatNumber(value); // Format y-axis labels with spaces
                         }
                     }
                 }
-            },
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return `$${formatNumber(tooltipItem.raw.toFixed(2))}`;  // Format tooltip values
-                        }
-                    }
-                }
-            },
-            animation: {
-                duration: 1000,
             }
-        }
-    });
+        });
 }
-
-// Event listener for the "Calculate" button
-document.getElementById('calculateButton').addEventListener('click', calculateIncome);
