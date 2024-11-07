@@ -1,6 +1,6 @@
 // Function to format numbers with spaces as the thousands separator
 function formatNumber(num) {
-    return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ').replace('.', ',');
+    return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
 // Function to calculate compound growth
@@ -9,6 +9,7 @@ function calculateIncome() {
     var incomeStream = document.getElementById("incomeStream").value;
     var involvementLevel = document.getElementById("involvement").value;
 
+    // Validation
     if (investmentAmount === "" || isNaN(investmentAmount) || investmentAmount <= 0) {
         alert("Please enter a valid investment amount.");
         return;
@@ -83,10 +84,6 @@ function createGraph(growthData) {
             },
             scales: {
                 x: {
-                    ticks: {
-                        maxRotation: 45,
-                        minRotation: 45
-                    },
                     title: {
                         display: true,
                         text: 'Years'
