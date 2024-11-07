@@ -1,4 +1,3 @@
-
 // Function to calculate compound growth
 function calculateIncome() {
     var investmentAmount = document.getElementById("investment").value;
@@ -27,18 +26,18 @@ function calculateIncome() {
         annualROI *= 1.3;  // 30% more return for active involvement
     }
 
-    var months = 240;  // 20 years = 240 months
+    var months = 120;  // 10 years = 120 months
     var growthData = [];
     var currentAmount = parseFloat(investmentAmount);
 
-    // Calculate monthly compounding over 240 months (20 years)
+    // Calculate monthly compounding over 120 months (10 years)
     for (var i = 1; i <= months; i++) {
         currentAmount *= (1 + annualROI / 12);  // Compounding monthly
         growthData.push({ month: i, value: currentAmount.toFixed(2) });
     }
 
     // Display the result as an estimate
-    var resultText = `Estimated passive income after 20 years: $${currentAmount.toFixed(2)}`;
+    var resultText = `Estimated passive income after 10 years: $${currentAmount.toFixed(2)}`;
     document.getElementById("result").innerHTML = resultText;
 
     // Create the graph
@@ -59,20 +58,41 @@ function createGraph(growthData) {
                 label: 'Investment Growth',
                 data: data,
                 borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-                fill: false
+                borderWidth: 2,
+                fill: false,
+                tension: 0.2 // Smooth lines
             }]
         },
         options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 14,
+                            family: 'Arial'
+                        }
+                    }
+                }
+            },
             scales: {
                 x: {
                     ticks: {
                         maxRotation: 45,
                         minRotation: 45
+                    },
+                    title: {
+                        display: true,
+                        text: 'Months'
                     }
                 },
                 y: {
-                    beginAtZero: false
+                    beginAtZero: false,
+                    title: {
+                        display: true,
+                        text: 'Investment Value ($)'
+                    }
                 }
             }
         }
