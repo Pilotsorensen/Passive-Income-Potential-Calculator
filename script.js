@@ -1,63 +1,56 @@
+// Function to format numbers with spaces
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
+// Chart and calculateIncome function
+let incomeChart;
+
 function calculateIncome() {
-    // Get user input values
-    const investment = parseFloat(document.getElementById('investment').value);
-    const incomeStream = document.getElementById('incomeStream').value;
-    const involvement = document.getElementById('involvement').value;
-    const timeframe = parseInt(document.getElementById('timeframe').value);
+    // Get user inputs
+    const investment = parseFloat(document.getElementById("investment").value);
+    const incomeStream = document.getElementById("incomeStream").value;
+    const involvement = document.getElementById("involvement").value;
+    const timeframe = parseInt(document.getElementById("timeframe").value);
 
-    // Check if the investment value is a valid number
-    if (isNaN(investment) || investment <= 0) {
-        alert("Please enter a valid investment amount.");
-        return;
+    // Set ROI based on income stream
+    let roi;
+    switch (incomeStream) {
+        case "rentalProperties": roi = 0.05; break;
+        case "stockMarket": roi = 0.07; break;
+        case "onlineBusinesses": roi = 0.10; break;
     }
 
-    // Define the ROI based on the income stream
-    let roi = 0;
-    if (incomeStream === 'rentalProperties') {
-        roi = 0.05; // 5% ROI
-    } else if (incomeStream === 'stockMarket') {
-        roi = 0.07; // 7% ROI
-    } else if (incomeStream === 'onlineBusinesses') {
-        roi = 0.1; // 10% ROI
+    // Adjust ROI based on involvement level
+    switch (involvement) {
+        case "handsOff": roi *= 0.9; break;
+        case "moderate": roi *= 1.0; break;
+        case "active": roi *= 1.1; break;
     }
 
-    // Define the multiplier based on level of involvement
-    let multiplier = 1;
-    if (involvement === 'handsOff') {
-        multiplier = 0.8; // 80% of ROI for hands-off
-    } else if (involvement === 'moderate') {
-        multiplier = 1; // 100% of ROI for moderate
-    } else if (involvement === 'active') {
-        multiplier = 1.2; // 120% of ROI for active
+    // Calculate the compound growth for each year
+    let projectedValues = [];
+    let currentAmount = investment;
+    for (let year = 1; year <= timeframe; year++) {
+        currentAmount *= (1 + roi);
+        projectedValues.push(parseFloat(currentAmount.toFixed(2)));
     }
 
-    // Calculate the effective ROI after considering the involvement multiplier
-    const effectiveRoi = roi * multiplier;
+    // Update the result
+    document.getElementById("result").textContent = `Your investment will grow to $${formatNumber(currentAmount.toFixed(2))} over ${timeframe} years.`;
 
-    // Calculate the projected values over the selected timeframe
-    const values = [];
-    const labels = [];
-
-    if (timeframe > 5) {
-        // Generate yearly values and labels
-        for (let year = 1; year <= timeframe; year++) {
-            const futureValue = investment * Math.pow(1 + effectiveRoi, year);
-            values.push(futureValue);
-            labels.push(`${year}`); // Label by year
-        }
-    } else {
-        // Generate monthly values and labels
-        for (let month = 1; month <= timeframe * 12; month++) {
-            const futureValue = investment * Math.pow(1 + effectiveRoi / 12, month);
-            values.push(futureValue);
-            labels.push(`Month ${month}`); // Label by month
-        }
+    // Update or create chart
+    if (incomeChart) {
+        incomeChart.destroy();
     }
 
-    // Format the final projected value for display
-    const formattedValue = values[values.length - 1].toLocaleString('en-US');
+    // Set labels to "Year" or "Month" based on the timeframe
+    const labels = Array.from({ length: timeframe }, (_, i) => (timeframe > 5 ? `Year ${i + 1}` : `Month ${i + 1}`));
 
-    // Display the result
-    document.getElementById('result').innerHTML = `Your investment will grow to <strong>$${formattedValue}</strong> in ${timeframe} years.`;
-
-    // Update the chart with calculated values and labels
+    const ctx = document.getElementById("incomeChart").getContext("2d");
+    incomeChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Projected Income Growth",
