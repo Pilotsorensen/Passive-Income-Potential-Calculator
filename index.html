@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Passive Income Calculator</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -29,10 +29,11 @@
             <option value="active">Active Involvement (High Time Commitment)</option>
         </select>
 
-        <label for="timeframe">Select Timeframe (years):</label>
+        <label for="timeframe">Select Timeframe:</label>
         <select id="timeframe">
-            <!-- Creates options from 1 to 50 years -->
-            ${Array.from({length: 50}, (_, i) => `<option value="${i + 1}">${i + 1} years</option>`).join('')}
+            <!-- Timeframe options: 1-10, then 15, 20, ... 50 -->
+            ${[...Array(10).keys()].map(i => `<option value="${i + 1}">${i + 1} years</option>`).join('')}
+            ${[15, 20, 25, 30, 35, 40, 45, 50].map(year => `<option value="${year}">${year} years</option>`).join('')}
         </select>
 
         <button onclick="calculateIncome()">Calculate</button>
