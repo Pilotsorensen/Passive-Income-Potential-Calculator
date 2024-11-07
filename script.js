@@ -4,6 +4,12 @@ function calculateIncome() {
     const incomeStream = document.getElementById("incomeStream").value;
     const involvement = document.getElementById("involvement").value;
 
+    // Check if investment is provided
+    if (isNaN(investment) || investment <= 0) {
+        alert("Please enter a valid initial investment.");
+        return;
+    }
+
     // Set the ROI based on the income stream selected
     let roi = 0;
     if (incomeStream === "rentalProperties") {
