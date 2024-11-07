@@ -54,3 +54,23 @@ function calculateIncome() {
             labels: labels,
             datasets: [{
                 label: "Projected Income Growth",
+                data: projectedValues,
+                borderColor: "#4CAF50",
+                backgroundColor: "rgba(76, 175, 80, 0.1)",
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: value => formatNumber(value.toFixed(2))
+                    }
+                }
+            }
+        }
+    });
+}
