@@ -1,72 +1,76 @@
 function calculateIncome() {
-    const investmentAmount = parseFloat(document.getElementById("investment").value);
-    const incomeStream = document.getElementById("incomeStream").value;
-    const involvementLevel = document.getElementById("involvement").value;
-    const timeframe = parseInt(document.getElementById("timeframe").value);
+    // Get the user inputs
+    let investment = parseFloat(document.getElementById('investment').value);
+    let incomeStream = document.getElementById('incomeStream').value;
+    let involvement = document.getElementById('involvement').value;
+    let timeframe = parseInt(document.getElementById('timeframe').value);
 
-    // Define ROI based on the income stream
+    // Define ROI based on the income stream selection
     let roi = 0;
-    if (incomeStream === "rentalProperties") {
-        roi = 0.05; // 5% ROI
-    } else if (incomeStream === "stockMarket") {
-        roi = 0.07; // 7% ROI
-    } else if (incomeStream === "onlineBusinesses") {
-        roi = 0.10; // 10% ROI
+    if (incomeStream === 'rentalProperties') {
+        roi = 0.05;
+    } else if (incomeStream === 'stockMarket') {
+        roi = 0.07;
+    } else if (incomeStream === 'onlineBusinesses') {
+        roi = 0.1;
     }
 
-    // Define the multiplier based on the involvement level
-    let involvementMultiplier = 1;
-    if (involvementLevel === "handsOff") {
-        involvementMultiplier = 1;
-    } else if (involvementLevel === "moderate") {
-        involvementMultiplier = 1.2; // Higher return for moderate involvement
-    } else if (involvementLevel === "active") {
-        involvementMultiplier = 1.5; // Higher return for active involvement
+    // Adjust ROI based on level of involvement
+    if (involvement === 'handsOff') {
+        roi *= 0.8; // 20% less return for hands-off approach
+    } else if (involvement === 'moderate') {
+        roi *= 1; // no change for moderate involvement
+    } else if (involvement === 'active') {
+        roi *= 1.2; // 20% more return for active approach
     }
 
-    const adjustedRoi = roi * involvementMultiplier;
+    // Calculate the projected growth
+    let result = [];
+    for (let year = 1; year <= timeframe; year++) {
+        investment += investment * roi; // Compounding interest formula
+        result.push(investment);
+    }
 
-    // Calculate the projected investment growth
-    let years = timeframe;
-    let months = 0;
+    // Format the final amount with spaces for thousands
+    let formattedResult = result[result.length - 1].toLocaleString();
+
+    // Update the result on the page
+    document.getElementById('result').innerHTML = `
+        <p>Your investment will grow to <strong>$${formattedResult}</strong> in ${timeframe} year(s).</p>
+    `;
+
+    // Set up the labels for the graph
     let labels = [];
-    let data = [];
-
-    if (years <= 5) {
-        // For up to 5 years, show months
-        months = years * 12;
-        for (let i = 1; i <= months; i++) {
-            const growth = investmentAmount * Math.pow(1 + adjustedRoi / 12, i);
-            labels.push(i);
-            data.push(growth);
+    if (timeframe <= 5) {
+        // Show months (12 months per year)
+        for (let i = 1; i <= timeframe * 12; i++) {
+            labels.push(`${i} month${i > 1 ? 's' : ''}`);
         }
     } else {
-        // For over 5 years, show years
-        for (let i = 1; i <= years; i++) {
-            const growth = investmentAmount * Math.pow(1 + adjustedRoi, i);
-            labels.push(i);
-            data.push(growth);
+        // Show years
+        for (let i = 1; i <= timeframe; i++) {
+            labels.push(`${i} year${i > 1 ? 's' : ''}`);
         }
     }
 
-    // Format the result with spaces
-    const formattedGrowth = formatNumber(data[data.length - 1]);
+    // Clear the previous chart if it exists
+    if (window.chartInstance) {
+        window.chartInstance.destroy();
+    }
 
-    // Display the results
-    document.getElementById("result").innerHTML = `Your investment will grow to: $${formattedGrowth}`;
-
-    // Create the chart
-    const ctx = document.getElementById("incomeChart").getContext("2d");
-    const chart = new Chart(ctx, {
-        type: "line",
+    // Create a new chart
+    let ctx = document.getElementById('incomeChart').getContext('2d');
+    window.chartInstance = new Chart(ctx, {
+        type: 'line',
         data: {
             labels: labels,
             datasets: [{
-                label: "Projected Investment Growth",
-                borderColor: "#4CAF50",
-                backgroundColor: "rgba(76, 175, 80, 0.2)",
-                data: data,
-                fill: true
+                label: 'Projected Investment Growth',
+                data: result,
+                borderColor: '#4CAF50',
+                backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                fill: true,
+                borderWidth: 2
             }]
         },
         options: {
@@ -75,22 +79,19 @@ function calculateIncome() {
                 x: {
                     title: {
                         display: true,
-                        text: years <= 5 ? 'Months' : 'Years'
-                    }
+                        text: timeframe <= 5 ? 'Months' : 'Years'
+                    },
                 },
                 y: {
+                    title: {
+                        display: true,
+                        text: 'Investment Value ($)'
+                    },
                     ticks: {
-                        callback: function(value) {
-                            return "$" + value.toLocaleString(); // Adds thousand separators
-                        }
+                        beginAtZero: false
                     }
                 }
             }
         }
     });
-}
-
-// Function to format numbers with spaces (e.g., 1,000,000 => 1 000 000)
-function formatNumber(number) {
-    return number.toLocaleString('en-US').replace(/,/g, ' ');
 }
