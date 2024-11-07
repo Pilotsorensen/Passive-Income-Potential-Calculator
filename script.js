@@ -1,77 +1,84 @@
-// Function to format numbers with spaces (e.g., 1 000 000)
-function formatNumber(num) {
-    return num.toLocaleString('en-US');
-}
-
-// Function to calculate passive income
 function calculateIncome() {
-    const investmentAmount = parseFloat(document.getElementById('investment').value);
-    const incomeStream = document.getElementById('incomeStream').value;
-    const involvementLevel = document.getElementById('involvement').value;
+    // Get values from the input fields
+    const investment = parseFloat(document.getElementById("investment").value);
+    const incomeStream = document.getElementById("incomeStream").value;
+    const involvement = document.getElementById("involvement").value;
 
-    if (isNaN(investmentAmount) || investmentAmount <= 0) {
-        alert("Please enter a valid investment amount.");
-        return;
-    }
-
-    // Determine ROI based on income stream selected
+    // Set the ROI based on the income stream selected
     let roi = 0;
-    if (incomeStream === 'rentalProperties') {
-        roi = 0.05; // 5% ROI
-    } else if (incomeStream === 'stockMarket') {
-        roi = 0.07; // 7% ROI
-    } else if (incomeStream === 'onlineBusinesses') {
-        roi = 0.1;  // 10% ROI
+    if (incomeStream === "rentalProperties") {
+        roi = 0.05; // 5% ROI for rental properties
+    } else if (incomeStream === "stockMarket") {
+        roi = 0.07; // 7% ROI for stock market
+    } else if (incomeStream === "onlineBusinesses") {
+        roi = 0.10; // 10% ROI for online businesses
     }
 
-    // Adjust ROI based on level of involvement
-    if (involvementLevel === 'moderate') {
-        roi += 0.02;  // +2% for moderate involvement
-    } else if (involvementLevel === 'active') {
-        roi += 0.05;  // +5% for active involvement
+    // Adjust the ROI based on the level of involvement
+    if (involvement === "moderate") {
+        roi *= 1.2; // Increase ROI by 20% for moderate involvement
+    } else if (involvement === "active") {
+        roi *= 1.5; // Increase ROI by 50% for active involvement
     }
 
-    // Calculate projected income for the next 20 years
-    let years = 20;
-    let projectedValues = [];
-    let currentValue = investmentAmount;
-
-    for (let i = 1; i <= years; i++) {
-        currentValue += currentValue * roi; // Compound growth
+    // Calculate the projected income for the next 20 years
+    const years = 20;
+    const projectedValues = [];
+    let currentValue = investment;
+    
+    for (let year = 1; year <= years; year++) {
+        currentValue += currentValue * roi;
         projectedValues.push(currentValue);
     }
 
-    // Update result text with formatted numbers
-    document.getElementById('result').innerHTML = `Your investment will grow to $${formatNumber(currentValue.toFixed(2))} in 20 years.`;
-    document.getElementById('result').style.display = "block"; // Show the result
+    // Format the result
+    const formattedResult = formatNumber(currentValue.toFixed(2));
+    document.getElementById("result").style.display = "block";
+    document.getElementById("result").innerHTML = `Your investment will grow to: $${formattedResult}`;
 
-    // Remove any existing chart
+    // Display the chart
+    updateChart(projectedValues);
+}
+
+function formatNumber(number) {
+    return number.replace(/\B(?=(\d{3})+(?!\d))/g, " "); // Adds space between numbers like 1 000 000
+}
+
+// Update the chart with new data
+function updateChart(projectedValues) {
+    const ctx = document.getElementById('incomeChart').getContext('2d');
+    
+    // Destroy previous chart if it exists
     if (window.incomeChart) {
-        window.incomeChart.destroy(); // Destroy old chart if it exists
+        window.incomeChart.destroy();
     }
 
-    // Update the chart
-    const ctx = document.getElementById('incomeChart').getContext('2d');
+    // Create a new chart
     window.incomeChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: Array.from({ length: 20 }, (_, i) => `Year ${i + 1}`), // Labels for years
+            labels: Array.from({ length: 20 }, (_, i) => `Year ${i + 1}`),
             datasets: [{
-                label: 'Projected Growth',
-                data: projectedValues.map(value => value.toFixed(2)),
-                borderColor: '#4CAF50',
+                label: 'Investment Growth',
+                data: projectedValues,
+                borderColor: '#4CAF50', // Green color for the line
                 fill: false,
-                borderWidth: 2
+                tension: 0.1
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false // Hide the legend
+                }
+            },
             scales: {
                 y: {
+                    beginAtZero: false, // Start from 0
                     ticks: {
                         callback: function(value) {
-                            return formatNumber(value); // Format y-axis labels with spaces
+                            return '$' + value.toLocaleString(); // Format the y-axis labels with commas
                         }
                     }
                 }
