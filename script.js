@@ -103,3 +103,8 @@ function calculateIncome() {
         }
     });
 }
+
+// Event listeners to update the result and graph dynamically when input changes
+document.getElementById('investment').addEventListener('input', calculateIncome);
+document.getElementById('incomeStream').addEventListener('change', calculateIncome);
+document.getElementById('involvement').addEventListener('change', calculateIncome);
