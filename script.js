@@ -49,6 +49,12 @@ function calculateIncome() {
     createGraph(growthData);
 }
 
+// Function to format numbers with spaces as the thousands separator
+function formatNumber(num) {
+    return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ').replace('.', ',');
+}
+
+
 // Function to create a graph using Chart.js
 function createGraph(growthData) {
     var ctx = document.getElementById('incomeChart').getContext('2d');
