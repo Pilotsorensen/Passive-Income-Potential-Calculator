@@ -37,7 +37,7 @@ function calculateIncome() {
     // Calculate the projected values over the selected timeframe
     const values = [];
     const labels = [];
-    
+
     if (timeframe > 5) {
         // Generate yearly values and labels
         for (let year = 1; year <= timeframe; year++) {
@@ -61,39 +61,3 @@ function calculateIncome() {
     document.getElementById('result').innerHTML = `Your investment will grow to <strong>$${formattedValue}</strong> in ${timeframe} years.`;
 
     // Update the chart with calculated values and labels
-    updateChart(labels, values, timeframe);
-}
-
-function updateChart(labels, values, timeframe) {
-    const ctx = document.getElementById('incomeChart').getContext('2d');
-
-    // Destroy previous chart instance if it exists
-    if (window.chart) {
-        window.chart.destroy();
-    }
-
-    // Create a new chart with updated data
-    window.chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Investment Growth ($)',
-                data: values,
-                borderColor: '#4CAF50',
-                fill: false,
-                tension: 0.1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: timeframe > 5 ? 'Years' : 'Months'
-                    },
-                    ticks: {
-                        callback: function(value, index) {
-                            // Show selected labels only for readability
-                            return timeframe > 5 || index % 12 
