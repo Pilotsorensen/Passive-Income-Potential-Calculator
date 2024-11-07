@@ -94,3 +94,42 @@ footer {
         padding: 20px;
     }
 }
+
+/* Styling for labels and inputs for better clarity */
+input[type="number"], select {
+    font-size: 16px;
+    padding: 15px;
+    margin-top: 10px;
+}
+
+/* Centering the container more effectively */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Styling for the label and form elements */
+label {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+/* Styling the chart container */
+.chart-container {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 750px;  /* Limit the chart's width */
+    height: 400px;
+}
+
+/* Ensure a good look on small screens */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 30px;
+    }
+}
