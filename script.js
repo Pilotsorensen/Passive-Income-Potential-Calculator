@@ -1,73 +1,41 @@
-function calculateIncome() {
-    const investment = parseFloat(document.getElementById('investment').value);
-    const incomeType = document.getElementById('income-type').value;
-    const involvement = document.getElementById('involvement').value;
+// Wait until the DOM is fully loaded before running the script
+document.addEventListener("DOMContentLoaded", function() {
+    // Function to calculate passive income
+    function calculateIncome() {
+        // Get user inputs by ID
+        var investmentAmount = document.getElementById("investment").value;
+        var incomeStream = document.getElementById("incomeStream").value;
+        var involvementLevel = document.getElementById("involvement").value;
 
-    if (isNaN(investment) || investment <= 0) {
-        alert("Please enter a valid investment amount.");
-        return;
+        // Check if the investment input is valid
+        if (investmentAmount === "" || isNaN(investmentAmount) || investmentAmount <= 0) {
+            alert("Please enter a valid investment amount.");
+            return;
+        }
+
+        var potentialIncome = 0;
+
+        // Basic income logic based on input
+        if (incomeStream === "realEstate") {
+            potentialIncome = investmentAmount * 0.08; // Assuming 8% ROI for real estate
+        } else if (incomeStream === "stocks") {
+            potentialIncome = investmentAmount * 0.05; // Assuming 5% ROI for stocks/dividends
+        } else if (incomeStream === "digitalProducts") {
+            potentialIncome = investmentAmount * 0.1; // Assuming 10% ROI for digital products
+        }
+
+        // Adjust income based on involvement level
+        if (involvementLevel === "medium") {
+            potentialIncome *= 1.2; // Increase income by 20% for medium involvement
+        } else if (involvementLevel === "high") {
+            potentialIncome *= 1.5; // Increase income by 50% for high involvement
+        }
+
+        // Display the result
+        var resultText = "Estimated Passive Income: $" + potentialIncome.toFixed(2);
+        document.getElementById("result").innerHTML = resultText;
     }
 
-    let rateOfReturn;
-
-    switch (incomeType) {
-        case 'realEstate':
-            rateOfReturn = 0.08; // 8% annual return for real estate
-            break;
-        case 'dividends':
-            rateOfReturn = 0.05; // 5% annual return for dividend stocks
-            break;
-        case 'digitalProducts':
-            rateOfReturn = 0.15; // 15% annual return for digital products
-            break;
-        case 'affiliateMarketing':
-            rateOfReturn = 0.10; // 10% annual return for affiliate marketing
-            break;
-    }
-
-    switch (involvement) {
-        case 'high':
-            rateOfReturn *= 1.1;
-            break;
-        case 'medium':
-            rateOfReturn *= 1.0;
-            break;
-        case 'low':
-            rateOfReturn *= 0.9;
-            break;
-    }
-
-    const estimatedIncome = investment * rateOfReturn;
-    document.getElementById('income-result').innerText = `$${estimatedIncome.toFixed(2)} per year`;
-
-    // Provide actionable tips based on selected income stream
-    provideTips(incomeType);
-}
-
-function provideTips(incomeType) {
-    let tips;
-    switch (incomeType) {
-        case 'realEstate':
-            tips = "Consider investing in REITs if you want lower involvement in real estate.";
-            break;
-        case 'dividends':
-            tips = "Focus on dividend aristocrats with long histories of steady payouts.";
-            break;
-        case 'digitalProducts':
-            tips = "Start with a simple product, like an ebook, and expand as you gain experience.";
-            break;
-        case 'affiliateMarketing':
-            tips = "Pick a niche you're familiar with to promote products authentically.";
-            break;
-    }
-    alert(tips);
-}
-
-function subscribe() {
-    const email = document.getElementById('email').value;
-    if (!email) {
-        alert("Please enter a valid email address.");
-        return;
-    }
-    alert(`Thank you for subscribing! Check your inbox for the PDF download.`);
-}
+    // Attach the calculateIncome function to the button's click event
+    document.querySelector("button").addEventListener("click", calculateIncome);
+});
