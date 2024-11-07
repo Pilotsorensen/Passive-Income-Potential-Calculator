@@ -45,9 +45,14 @@ function calculateIncome() {
     document.getElementById('result').innerHTML = `Your investment will grow to $${formatNumber(currentValue.toFixed(2))} in 20 years.`;
     document.getElementById('result').style.display = "block"; // Show the result
 
+    // Remove any existing chart
+    if (window.incomeChart) {
+        window.incomeChart.destroy(); // Destroy old chart if it exists
+    }
+
     // Update the chart
     const ctx = document.getElementById('incomeChart').getContext('2d');
-    const incomeChart = new Chart(ctx, {
+    window.incomeChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: Array.from({ length: 20 }, (_, i) => `Year ${i + 1}`), // Labels for years
