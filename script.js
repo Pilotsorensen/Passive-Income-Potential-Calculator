@@ -1,3 +1,8 @@
+// Function to format numbers with spaces as the thousands separator
+function formatNumber(num) {
+    return num.toLocaleString('en', {useGrouping: true}).replace(/,/g, ' ');
+}
+
 // Function to calculate compound growth
 function calculateIncome() {
     var investmentAmount = document.getElementById("investment").value;
@@ -37,7 +42,7 @@ function calculateIncome() {
     }
 
     // Display the result as an estimate
-    var resultText = `Estimated passive income after 10 years: $${currentAmount.toFixed(2)}`;
+    var resultText = `Estimated passive income after 10 years: $${formatNumber(currentAmount.toFixed(2))}`;
     document.getElementById("result").innerHTML = resultText;
 
     // Create the graph
@@ -48,7 +53,7 @@ function calculateIncome() {
 function createGraph(growthData) {
     var ctx = document.getElementById('incomeChart').getContext('2d');
     var labels = growthData.map(function(data) { return "Month " + data.month; });
-    var data = growthData.map(function(data) { return data.value; });
+    var data = growthData.map(function(data) { return formatNumber(data.value); });
 
     var chart = new Chart(ctx, {
         type: 'line', // Line graph
@@ -92,6 +97,11 @@ function createGraph(growthData) {
                     title: {
                         display: true,
                         text: 'Investment Value ($)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return formatNumber(value); // Format y-axis values
+                        }
                     }
                 }
             }
