@@ -7,6 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js -->
     <link rel="stylesheet" href="styles.css">
     <style>
+        /* CSS styles to center, style borders, and format numbers */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
@@ -23,8 +24,8 @@
             background-color: white;
             padding: 30px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            border-top: 8px solid #4CAF50; /* Green top border */
+            border-radius: 10px;
+            border-top: 12px solid #4CAF50;
         }
         h1 {
             text-align: center;
@@ -93,31 +94,27 @@
 
         <label for="timeframe">Select Timeframe:</label>
         <select id="timeframe">
-            <option value="1">1 year</option>
-            <option value="2">2 years</option>
-            <option value="3">3 years</option>
-            <option value="4">4 years</option>
-            <option value="5">5 years</option>
-            <option value="6">6 years</option>
-            <option value="7">7 years</option>
-            <option value="8">8 years</option>
-            <option value="9">9 years</option>
-            <option value="10">10 years</option>
-            <option value="15">15 years</option>
-            <option value="20">20 years</option>
-            <option value="25">25 years</option>
-            <option value="30">30 years</option>
-            <option value="35">35 years</option>
-            <option value="40">40 years</option>
-            <option value="45">45 years</option>
-            <option value="50">50 years</option>
+            <option value="1">1 Year</option>
+            <option value="2">2 Years</option>
+            <option value="3">3 Years</option>
+            <option value="4">4 Years</option>
+            <option value="5">5 Years</option>
+            <option value="10">10 Years</option>
+            <option value="15">15 Years</option>
+            <option value="20">20 Years</option>
+            <option value="25">25 Years</option>
+            <option value="30">30 Years</option>
+            <option value="35">35 Years</option>
+            <option value="40">40 Years</option>
+            <option value="45">45 Years</option>
+            <option value="50">50 Years</option>
         </select>
 
         <button onclick="calculateIncome()">Calculate</button>
 
         <div id="result"></div>
 
-        <h3>Projected Growth Over the Selected Timeframe</h3>
+        <h3>Projected Growth</h3>
         <div class="chart-container">
             <canvas id="incomeChart" width="400" height="200"></canvas>
         </div>
