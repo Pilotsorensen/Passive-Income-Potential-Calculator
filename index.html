@@ -4,69 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Passive Income Calculator</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            width: 90%;
-            max-width: 800px;
-            background-color: white;
-            padding: 30px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        label {
-            display: block;
-            margin-top: 15px;
-            font-size: 14px;
-            color: #555;
-        }
-        input, select, button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            font-size: 14px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .chart-container {
-            margin-top: 30px;
-        }
-        #result {
-            text-align: center;
-            font-size: 18px;
-            color: #333;
-            margin-top: 20px;
-        }
-        footer {
-            margin-top: 30px;
-            text-align: center;
-        }
-    </style>
 </head>
 <body>
 
@@ -90,11 +29,17 @@
             <option value="active">Active Involvement (High Time Commitment)</option>
         </select>
 
+        <label for="timeframe">Select Timeframe (years):</label>
+        <select id="timeframe">
+            <!-- Creates options from 1 to 50 years -->
+            ${Array.from({length: 50}, (_, i) => `<option value="${i + 1}">${i + 1} years</option>`).join('')}
+        </select>
+
         <button onclick="calculateIncome()">Calculate</button>
 
         <div id="result"></div>
 
-        <h3>Projected Growth Over the Next 10 Years</h3>
+        <h3>Projected Growth Over the Selected Timeframe</h3>
         <div class="chart-container">
             <canvas id="incomeChart" width="400" height="200"></canvas>
         </div>
