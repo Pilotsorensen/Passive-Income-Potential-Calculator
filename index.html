@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passive Income Potential Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Passive Income Potential Calculator</h1>
+        <p>Estimate your potential earnings with different passive income streams</p>
+    </header>
+
+    <main>
+        <section id="calculator">
+            <h2>Calculate Your Passive Income</h2>
+            <form id="income-form">
+                <label for="investment">Investment Amount ($):</label>
+                <input type="number" id="investment" name="investment" required>
+
+                <label for="income-type">Income Stream Type:</label>
+                <select id="income-type" name="income-type" required>
+                    <option value="realEstate">Real Estate</option>
+                    <option value="dividends">Dividend Stocks</option>
+                    <option value="digitalProducts">Digital Products</option>
+                    <option value="affiliateMarketing">Affiliate Marketing</option>
+                </select>
+
+                <label for="involvement">Level of Involvement:</label>
+                <select id="involvement" name="involvement" required>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+
+                <button type="button" onclick="calculateIncome()">Calculate</button>
+            </form>
+
+            <div id="results">
+                <h3>Your Estimated Passive Income:</h3>
+                <p id="income-result">$0</p>
+            </div>
+        </section>
+
+        <section id="newsletter">
+            <h2>Sign Up for Our Newsletter</h2>
+            <p>Get a free PDF: <em>Best Passive Income Tools for Beginners</em></p>
+            <form id="newsletter-form">
+                <input type="email" id="email" placeholder="Enter your email" required>
+                <button type="button" onclick="subscribe()">Subscribe</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
