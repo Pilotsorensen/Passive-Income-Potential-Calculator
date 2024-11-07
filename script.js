@@ -26,9 +26,20 @@ function calculateIncome() {
 
     // Calculate the projected growth
     let result = [];
+    let months = 0;
     for (let year = 1; year <= timeframe; year++) {
-        investment += investment * roi; // Compounding interest formula
-        result.push(investment);
+        if (timeframe <= 5) {
+            // If timeframe is less than or equal to 5 years, calculate for months
+            for (let month = 1; month <= 12; month++) {
+                investment += investment * roi / 12; // Monthly ROI compounding
+                months++;
+                result.push(investment);
+            }
+        } else {
+            // If timeframe is more than 5 years, calculate for years
+            investment += investment * roi;
+            result.push(investment);
+        }
     }
 
     // Format the final amount with spaces for thousands
@@ -43,7 +54,7 @@ function calculateIncome() {
     let labels = [];
     if (timeframe <= 5) {
         // Show months (12 months per year)
-        for (let i = 1; i <= timeframe * 12; i++) {
+        for (let i = 1; i <= months; i++) {
             labels.push(`${i} month${i > 1 ? 's' : ''}`);
         }
     } else {
