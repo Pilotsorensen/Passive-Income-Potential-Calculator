@@ -1,87 +1,71 @@
-// Function to format numbers with spaces as the thousands separator
+// Function to format numbers with spaces between thousands
 function formatNumber(num) {
-    return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return num.toLocaleString('en', { useGrouping: true });
 }
 
-// Function to calculate compound growth
+// Function to calculate passive income and generate graph
 function calculateIncome() {
-    var investmentAmount = document.getElementById("investment").value;
-    var incomeStream = document.getElementById("incomeStream").value;
-    var involvementLevel = document.getElementById("involvement").value;
+    // Get the user input values
+    const investment = parseFloat(document.getElementById('investment').value);
+    const incomeStream = document.getElementById('incomeStream').value;
+    const involvement = document.getElementById('involvement').value;
 
-    // Validation
-    if (investmentAmount === "" || isNaN(investmentAmount) || investmentAmount <= 0) {
-        alert("Please enter a valid investment amount.");
+    if (isNaN(investment) || investment <= 0) {
+        document.getElementById('result').innerHTML = "Please enter a valid initial investment.";
         return;
     }
 
-    // Define ROI based on income stream
-    var annualROI = 0;
+    // Define the ROI based on the selected income stream
+    let roi = 0;
     if (incomeStream === "rentalProperties") {
-        annualROI = 0.05;  // 5% ROI for rental properties
+        roi = 0.05;  // 5% ROI for rental properties
     } else if (incomeStream === "stockMarket") {
-        annualROI = 0.07;  // 7% ROI for stock market investments
+        roi = 0.07;  // 7% ROI for stock market investments
     } else if (incomeStream === "onlineBusinesses") {
-        annualROI = 0.10;  // 10% ROI for online businesses
+        roi = 0.10;  // 10% ROI for online businesses
     }
 
-    // Adjust ROI based on involvement level
-    if (involvementLevel === "moderate") {
-        annualROI *= 1.15;  // 15% more return for moderate involvement
-    } else if (involvementLevel === "active") {
-        annualROI *= 1.3;  // 30% more return for active involvement
+    // Define the involvement factor (affects growth rate)
+    let involvementFactor = 1;
+    if (involvement === "handsOff") {
+        involvementFactor = 1;  // Low involvement, no change to ROI
+    } else if (involvement === "moderate") {
+        involvementFactor = 1.2;  // Moderate involvement, boost ROI slightly
+    } else if (involvement === "active") {
+        involvementFactor = 1.5;  // Active involvement, boost ROI significantly
     }
 
-    var years = 10;  // 10 years
-    var growthData = [];
-    var currentAmount = parseFloat(investmentAmount);
+    // Calculate the adjusted ROI
+    const adjustedRoi = roi * involvementFactor;
 
-    // Calculate yearly compounding over 10 years
-    for (var i = 1; i <= years; i++) {
-        currentAmount *= (1 + annualROI);  // Compounding yearly
-        growthData.push({ year: i, value: currentAmount.toFixed(2) });
+    // Prepare the data for the graph (20 years)
+    let yearlyProjections = [];
+    let currentAmount = investment;
+    for (let year = 1; year <= 20; year++) {
+        currentAmount += currentAmount * adjustedRoi;
+        yearlyProjections.push(currentAmount);
     }
 
-    // Display the result as an estimate
-    var resultText = `Estimated passive income after 10 years: $${formatNumber(currentAmount.toFixed(2))}`;
-    document.getElementById("result").innerHTML = resultText;
+    // Display result as the total after 20 years with formatted number
+    document.getElementById('result').innerHTML = `After 20 years, your investment will grow to $${formatNumber(currentAmount.toFixed(2))}.`;
 
-    // Create the graph
-    createGraph(growthData);
-}
-
-// Function to create a graph using Chart.js
-function createGraph(growthData) {
-    var ctx = document.getElementById('incomeChart').getContext('2d');
-    var labels = growthData.map(function(data) { return "Year " + data.year; });
-    var data = growthData.map(function(data) { return parseFloat(data.value); });
-
-    var chart = new Chart(ctx, {
-        type: 'line', // Line graph
+    // Generate the graph using Chart.js
+    const ctx = document.getElementById('incomeChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
         data: {
-            labels: labels,
+            labels: Array.from({ length: 20 }, (_, i) => i + 1),  // 20 years (labels 1 to 20)
             datasets: [{
-                label: 'Investment Growth',
-                data: data,
+                label: 'Projected Income',
+                data: yearlyProjections,
                 borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 2,
-                fill: false,
-                tension: 0.2 // Smooth lines
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: true,
+                tension: 0.4
             }]
         },
         options: {
             responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                    labels: {
-                        font: {
-                            size: 14,
-                            family: 'Arial'
-                        }
-                    }
-                }
-            },
             scales: {
                 x: {
                     title: {
@@ -90,17 +74,31 @@ function createGraph(growthData) {
                     }
                 },
                 y: {
-                    beginAtZero: false,
                     title: {
                         display: true,
-                        text: 'Investment Value ($)'
+                        text: 'Income ($)'
                     },
                     ticks: {
                         callback: function(value) {
-                            return formatNumber(value); // Format y-axis values
+                            return formatNumber(value); // Format y-axis values with spaces
                         }
                     }
                 }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return `$${formatNumber(tooltipItem.raw.toFixed(2))}`;  // Format tooltip values
+                        }
+                    }
+                }
+            },
+            animation: {
+                duration: 1000,
             }
         }
     });
