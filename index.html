@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js -->
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* CSS styles to center, style borders, and format numbers */
+        /* Global body styles */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
@@ -18,33 +18,45 @@
             align-items: center;
             height: 100vh;
         }
+
+        /* Container for the form */
         .container {
-            width: 90%;
+            width: 100%;
             max-width: 800px;
+            padding: 40px;
             background-color: white;
-            padding: 30px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
-            border-top: 12px solid #4CAF50;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            border-top: 15px solid #4CAF50; /* Green bar at top with thicker border */
         }
+
+        /* Heading styles */
         h1 {
             text-align: center;
             color: #333;
+            margin-bottom: 30px;
         }
+
+        /* Form element styles */
         label {
             display: block;
             margin-top: 15px;
             font-size: 14px;
             color: #555;
         }
+
+        /* Input, select, and button styles */
         input, select, button {
             width: 100%;
-            padding: 10px;
-            margin-top: 5px;
+            padding: 12px;
+            margin-top: 10px;
             font-size: 14px;
             border-radius: 5px;
             border: 1px solid #ddd;
         }
+
+        /* Button styles */
         button {
             background-color: #4CAF50;
             color: white;
@@ -52,21 +64,36 @@
             cursor: pointer;
             margin-top: 20px;
         }
+
         button:hover {
             background-color: #45a049;
         }
-        .chart-container {
-            margin-top: 30px;
-        }
+
+        /* Result text styling */
         #result {
             text-align: center;
             font-size: 18px;
             color: #333;
             margin-top: 20px;
         }
+
+        /* Chart container styling */
+        .chart-container {
+            margin-top: 30px;
+        }
+
+        /* Footer text styling */
         footer {
             margin-top: 30px;
             text-align: center;
+        }
+
+        /* Ensure page is responsive */
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -92,8 +119,9 @@
             <option value="active">Active Involvement (High Time Commitment)</option>
         </select>
 
-        <label for="timeframe">Select Timeframe:</label>
+        <label for="timeframe">Choose Your Timeframe:</label>
         <select id="timeframe">
+            <!-- Timeframe options from 1 to 10, then every 5 years up to 50 -->
             <option value="1">1 Year</option>
             <option value="2">2 Years</option>
             <option value="3">3 Years</option>
@@ -114,7 +142,7 @@
 
         <div id="result"></div>
 
-        <h3>Projected Growth</h3>
+        <h3>Projected Growth Over the Selected Timeframe</h3>
         <div class="chart-container">
             <canvas id="incomeChart" width="400" height="200"></canvas>
         </div>
