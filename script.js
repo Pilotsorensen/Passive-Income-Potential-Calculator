@@ -1,41 +1,80 @@
-// Wait until the DOM is fully loaded before running the script
-document.addEventListener("DOMContentLoaded", function() {
-    // Function to calculate passive income
-    function calculateIncome() {
-        // Get user inputs by ID
-        var investmentAmount = document.getElementById("investment").value;
-        var incomeStream = document.getElementById("incomeStream").value;
-        var involvementLevel = document.getElementById("involvement").value;
 
-        // Check if the investment input is valid
-        if (investmentAmount === "" || isNaN(investmentAmount) || investmentAmount <= 0) {
-            alert("Please enter a valid investment amount.");
-            return;
-        }
+// Function to calculate compound growth
+function calculateIncome() {
+    var investmentAmount = document.getElementById("investment").value;
+    var incomeStream = document.getElementById("incomeStream").value;
+    var involvementLevel = document.getElementById("involvement").value;
 
-        var potentialIncome = 0;
-
-        // Basic income logic based on input
-        if (incomeStream === "realEstate") {
-            potentialIncome = investmentAmount * 0.08; // Assuming 8% ROI for real estate
-        } else if (incomeStream === "stocks") {
-            potentialIncome = investmentAmount * 0.05; // Assuming 5% ROI for stocks/dividends
-        } else if (incomeStream === "digitalProducts") {
-            potentialIncome = investmentAmount * 0.1; // Assuming 10% ROI for digital products
-        }
-
-        // Adjust income based on involvement level
-        if (involvementLevel === "medium") {
-            potentialIncome *= 1.2; // Increase income by 20% for medium involvement
-        } else if (involvementLevel === "high") {
-            potentialIncome *= 1.5; // Increase income by 50% for high involvement
-        }
-
-        // Display the result
-        var resultText = "Estimated Passive Income: $" + potentialIncome.toFixed(2);
-        document.getElementById("result").innerHTML = resultText;
+    if (investmentAmount === "" || isNaN(investmentAmount) || investmentAmount <= 0) {
+        alert("Please enter a valid investment amount.");
+        return;
     }
 
-    // Attach the calculateIncome function to the button's click event
-    document.querySelector("button").addEventListener("click", calculateIncome);
-});
+    // Define ROI based on income stream
+    var annualROI = 0;
+    if (incomeStream === "rentalProperties") {
+        annualROI = 0.05;  // 5% ROI for rental properties
+    } else if (incomeStream === "stockMarket") {
+        annualROI = 0.07;  // 7% ROI for stock market investments
+    } else if (incomeStream === "onlineBusinesses") {
+        annualROI = 0.10;  // 10% ROI for online businesses
+    }
+
+    // Adjust ROI based on involvement level
+    if (involvementLevel === "moderate") {
+        annualROI *= 1.15;  // 15% more return for moderate involvement
+    } else if (involvementLevel === "active") {
+        annualROI *= 1.3;  // 30% more return for active involvement
+    }
+
+    var months = 240;  // 20 years = 240 months
+    var growthData = [];
+    var currentAmount = parseFloat(investmentAmount);
+
+    // Calculate monthly compounding over 240 months (20 years)
+    for (var i = 1; i <= months; i++) {
+        currentAmount *= (1 + annualROI / 12);  // Compounding monthly
+        growthData.push({ month: i, value: currentAmount.toFixed(2) });
+    }
+
+    // Display the result as an estimate
+    var resultText = `Estimated passive income after 20 years: $${currentAmount.toFixed(2)}`;
+    document.getElementById("result").innerHTML = resultText;
+
+    // Create the graph
+    createGraph(growthData);
+}
+
+// Function to create a graph using Chart.js
+function createGraph(growthData) {
+    var ctx = document.getElementById('incomeChart').getContext('2d');
+    var labels = growthData.map(function(data) { return "Month " + data.month; });
+    var data = growthData.map(function(data) { return data.value; });
+
+    var chart = new Chart(ctx, {
+        type: 'line', // Line graph
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Investment Growth',
+                data: data,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+                fill: false
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                },
+                y: {
+                    beginAtZero: false
+                }
+            }
+        }
+    });
+}
