@@ -71,14 +71,6 @@ button:hover {
 /* Chart container styling */
 .chart-container {
     margin-top: 30px;
-    position: relative;
-    height: 400px; /* Adjust the height of the chart */
-}
-
-/* Ensure the chart scales well */
-canvas {
-    width: 100% !important;
-    height: 100% !important;
 }
 
 /* Footer text styling */
