@@ -16,10 +16,10 @@ body {
     max-width: 800px;   /* Limits the width of the calculator */
     padding: 30px;      /* Adds padding around the content */
     background-color: white;
-    border-radius: 10px;
+    border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     margin: 20px;       /* Adds space around the container */
-    border-top: 15px solid #4CAF50; /* Restored green top border */
+    border-top: 25px solid #4CAF50; /* Thicker green top border with rounded corners */
 }
 
 /* Heading styles */
