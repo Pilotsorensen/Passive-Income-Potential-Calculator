@@ -1,84 +1,100 @@
-// Function to calculate the projected passive income
+// Function to calculate compound growth
 function calculateIncome() {
-    // Get user input values
-    const investment = parseFloat(document.getElementById('investment').value);
-    const incomeStream = document.getElementById('incomeStream').value;
-    const involvement = document.getElementById('involvement').value;
+    var investmentAmount = document.getElementById("investment").value;
+    var incomeStream = document.getElementById("incomeStream").value;
+    var involvementLevel = document.getElementById("involvement").value;
 
-    // Define the ROI based on the income stream
-    let roi = 0;
-    if (incomeStream === 'rentalProperties') {
-        roi = 0.05; // 5% ROI
-    } else if (incomeStream === 'stockMarket') {
-        roi = 0.07; // 7% ROI
-    } else if (incomeStream === 'onlineBusinesses') {
-        roi = 0.1; // 10% ROI
+    if (investmentAmount === "" || isNaN(investmentAmount) || investmentAmount <= 0) {
+        alert("Please enter a valid investment amount.");
+        return;
     }
 
-    // Define the multiplier based on level of involvement
-    let multiplier = 1;
-    if (involvement === 'handsOff') {
-        multiplier = 0.8; // 80% of ROI for hands-off
-    } else if (involvement === 'moderate') {
-        multiplier = 1; // 100% of ROI for moderate
-    } else if (involvement === 'active') {
-        multiplier = 1.2; // 120% of ROI for active
+    // Define ROI based on income stream
+    var annualROI = 0;
+    if (incomeStream === "rentalProperties") {
+        annualROI = 0.05;  // 5% ROI for rental properties
+    } else if (incomeStream === "stockMarket") {
+        annualROI = 0.07;  // 7% ROI for stock market investments
+    } else if (incomeStream === "onlineBusinesses") {
+        annualROI = 0.10;  // 10% ROI for online businesses
     }
 
-    // Calculate the annual growth rate
-    const effectiveRoi = roi * multiplier;
-
-    // Calculate the projected values over the next 20 years
-    const years = 20;
-    const values = [];
-    for (let year = 1; year <= years; year++) {
-        const futureValue = investment * Math.pow(1 + effectiveRoi, year);
-        values.push(futureValue);
+    // Adjust ROI based on involvement level
+    if (involvementLevel === "moderate") {
+        annualROI *= 1.15;  // 15% more return for moderate involvement
+    } else if (involvementLevel === "active") {
+        annualROI *= 1.3;  // 30% more return for active involvement
     }
 
-    // Format numbers with spaces (e.g., 1 000 000 instead of 1000000)
-    const formattedValue = values[values.length - 1].toLocaleString('en-US');
+    var months = 120;  // 10 years = 120 months
+    var growthData = [];
+    var currentAmount = parseFloat(investmentAmount);
 
-    // Display the result and update the graph
-    const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = `Your investment will grow to <strong>$${formattedValue}</strong> in 20 years.`;
+    // Calculate monthly compounding over 120 months (10 years)
+    for (var i = 1; i <= months; i++) {
+        currentAmount *= (1 + annualROI / 12);  // Compounding monthly
+        growthData.push({ month: i, value: currentAmount.toFixed(2) });
+    }
 
-    // Update the chart
-    updateChart(values);
+    // Display the result as an estimate
+    var resultText = `Estimated passive income after 10 years: $${currentAmount.toFixed(2)}`;
+    document.getElementById("result").innerHTML = resultText;
+
+    // Create the graph
+    createGraph(growthData);
 }
 
-// Function to update the graph
-function updateChart(values) {
-    const ctx = document.getElementById('incomeChart').getContext('2d');
+// Function to create a graph using Chart.js
+function createGraph(growthData) {
+    var ctx = document.getElementById('incomeChart').getContext('2d');
+    var labels = growthData.map(function(data) { return "Month " + data.month; });
+    var data = growthData.map(function(data) { return data.value; });
 
-    // Destroy the previous chart instance (if any) before creating a new one
-    if (window.chart) {
-        window.chart.destroy();
-    }
-
-    // Create a new chart with the updated data
-    window.chart = new Chart(ctx, {
-        type: 'line',
+    var chart = new Chart(ctx, {
+        type: 'line', // Line graph
         data: {
-            labels: Array.from({ length: 20 }, (_, i) => i + 1), // Years 1 to 20
+            labels: labels,
             datasets: [{
-                label: 'Investment Growth ($)',
-                data: values,
-                borderColor: '#4CAF50',
+                label: 'Investment Growth',
+                data: data,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
                 fill: false,
-                tension: 0.1
+                tension: 0.2 // Smooth lines
             }]
         },
         options: {
             responsive: true,
-            scales: {
-                y: {
-                    ticks: {
-                        callback: function(value) {
-                            return '$' + value.toLocaleString('en-US'); // Format y-axis with commas
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 14,
+                            family: 'Arial'
                         }
                     }
                 }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 45
+                    },
+                    title: {
+                        display: true,
+                        text: 'Months'
+                    }
+                },
+                y: {
+                    beginAtZero: false,
+                    title: {
+                        display: true,
+                        text: 'Investment Value ($)'
+                    }
+                }
             }
-        });
+        }
+    });
 }
