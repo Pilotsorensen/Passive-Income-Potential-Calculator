@@ -1,97 +1,110 @@
-// Function to calculate compound growth
 function calculateIncome() {
-    var investmentAmount = document.getElementById("investment").value;
-    var incomeStream = document.getElementById("incomeStream").value;
-    var involvementLevel = document.getElementById("involvement").value;
+    // Get user input values
+    const investment = parseFloat(document.getElementById('investment').value);
+    const incomeStream = document.getElementById('incomeStream').value;
+    const involvement = document.getElementById('involvement').value;
+    const timeframe = parseInt(document.getElementById('timeframe').value);
 
-    if (investmentAmount === "" || isNaN(investmentAmount) || investmentAmount <= 0) {
+    // Check if the investment value is a valid number
+    if (isNaN(investment) || investment <= 0) {
         alert("Please enter a valid investment amount.");
         return;
     }
 
-    // Define ROI based on income stream
-    var annualROI = 0;
-    if (incomeStream === "rentalProperties") {
-        annualROI = 0.05;  // 5% ROI for rental properties
-    } else if (incomeStream === "stockMarket") {
-        annualROI = 0.07;  // 7% ROI for stock market investments
-    } else if (incomeStream === "onlineBusinesses") {
-        annualROI = 0.10;  // 10% ROI for online businesses
+    // Define the ROI based on the income stream
+    let roi = 0;
+    if (incomeStream === 'rentalProperties') {
+        roi = 0.05; // 5% ROI
+    } else if (incomeStream === 'stockMarket') {
+        roi = 0.07; // 7% ROI
+    } else if (incomeStream === 'onlineBusinesses') {
+        roi = 0.1; // 10% ROI
     }
 
-    // Adjust ROI based on involvement level
-    if (involvementLevel === "moderate") {
-        annualROI *= 1.15;  // 15% more return for moderate involvement
-    } else if (involvementLevel === "active") {
-        annualROI *= 1.3;  // 30% more return for active involvement
+    // Define the multiplier based on level of involvement
+    let multiplier = 1;
+    if (involvement === 'handsOff') {
+        multiplier = 0.8; // 80% of ROI for hands-off
+    } else if (involvement === 'moderate') {
+        multiplier = 1; // 100% of ROI for moderate
+    } else if (involvement === 'active') {
+        multiplier = 1.2; // 120% of ROI for active
     }
 
-    var months = 120;  // 10 years = 120 months
-    var growthData = [];
-    var currentAmount = parseFloat(investmentAmount);
+    // Calculate the effective ROI after considering the involvement multiplier
+    const effectiveRoi = roi * multiplier;
 
-    // Calculate monthly compounding over 120 months (10 years)
-    for (var i = 1; i <= months; i++) {
-        currentAmount *= (1 + annualROI / 12);  // Compounding monthly
-        growthData.push({ month: i, value: currentAmount.toFixed(2) });
+    // Calculate the projected values over the selected timeframe
+    const values = [];
+    let labels = [];
+    
+    if (timeframe > 5) {
+        // Generate yearly labels and values if timeframe is above 5 years
+        for (let year = 1; year <= timeframe; year++) {
+            const futureValue = investment * Math.pow(1 + effectiveRoi, year);
+            values.push(futureValue);
+            labels.push(year); // Label by year
+        }
+    } else {
+        // Generate monthly labels and values if timeframe is 5 years or below
+        for (let month = 1; month <= timeframe * 12; month++) {
+            const futureValue = investment * Math.pow(1 + effectiveRoi / 12, month);
+            values.push(futureValue);
+            labels.push(month); // Label by month
+        }
     }
 
-    // Display the result as an estimate
-    var resultText = `Estimated passive income after 10 years: $${currentAmount.toFixed(2)}`;
-    document.getElementById("result").innerHTML = resultText;
+    // Format final projected value
+    const formattedValue = values[values.length - 1].toLocaleString('en-US');
 
-    // Create the graph
-    createGraph(growthData);
+    // Display the result
+    document.getElementById('result').innerHTML = `Your investment will grow to <strong>$${formattedValue}</strong> in ${timeframe} years.`;
+
+    // Update the chart with calculated values and labels
+    updateChart(labels, values);
 }
 
-// Function to create a graph using Chart.js
-function createGraph(growthData) {
-    var ctx = document.getElementById('incomeChart').getContext('2d');
-    var labels = growthData.map(function(data) { return "Month " + data.month; });
-    var data = growthData.map(function(data) { return data.value; });
+function updateChart(labels, values) {
+    const ctx = document.getElementById('incomeChart').getContext('2d');
 
-    var chart = new Chart(ctx, {
-        type: 'line', // Line graph
+    // Destroy previous chart instance if it exists
+    if (window.chart) {
+        window.chart.destroy();
+    }
+
+    // Create new chart with the updated data
+    window.chart = new Chart(ctx, {
+        type: 'line',
         data: {
             labels: labels,
             datasets: [{
-                label: 'Investment Growth',
-                data: data,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 2,
+                label: 'Investment Growth ($)',
+                data: values,
+                borderColor: '#4CAF50',
                 fill: false,
-                tension: 0.2 // Smooth lines
+                tension: 0.1
             }]
         },
         options: {
             responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                    labels: {
-                        font: {
-                            size: 14,
-                            family: 'Arial'
-                        }
-                    }
-                }
-            },
             scales: {
                 x: {
-                    ticks: {
-                        maxRotation: 45,
-                        minRotation: 45
-                    },
                     title: {
                         display: true,
-                        text: 'Months'
+                        text: labels.length > 60 ? 'Years' : 'Months'
+                    },
+                    ticks: {
+                        callback: function(value, index) {
+                            // Show only select labels for readability
+                            return labels.length > 60 ? labels[index] : (index % 12 === 0 ? labels[index] : '');
+                        }
                     }
                 },
                 y: {
-                    beginAtZero: false,
-                    title: {
-                        display: true,
-                        text: 'Investment Value ($)'
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value.toLocaleString('en-US');
+                        }
                     }
                 }
             }
