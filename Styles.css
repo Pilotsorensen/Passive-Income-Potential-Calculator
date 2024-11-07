@@ -1,88 +1,37 @@
-/* Global body styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Full height of the screen */
+/* Additional styling for the Explanation Section */
+.explanation-section {
+    background-color: #ffffff;
+    padding: 40px;
+    margin-top: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Container for the form */
-.container {
-    width: 100%;
-    max-width: 800px;   /* Limits the width of the calculator */
-    padding: 40px;      /* Adds padding around the content */
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    margin: 20px;       /* Adds space around the container */
-    border-top: 10px solid #4CAF50; /* Larger top border for emphasis */
-}
-
-/* Heading styles */
-h1 {
-    text-align: center;
+.explanation-section h2 {
+    font-size: 24px;
     color: #333;
-    margin-bottom: 30px; /* Space below the heading */
+    margin-bottom: 20px;
 }
 
-/* Form element styles */
-label {
-    display: block;
-    margin-top: 15px;
-    font-size: 14px;
+.explanation-section p {
+    font-size: 16px;
+    line-height: 1.6;
     color: #555;
+    margin-bottom: 15px;
 }
 
-/* Input, select, and button styles */
-input, select, button {
-    width: 100%;
-    padding: 12px;  /* Increased padding for better readability */
-    margin-top: 10px;
-    font-size: 14px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-}
-
-/* Button styles */
-button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin-top: 20px;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-/* Result text styling */
-#result {
-    text-align: center;
-    font-size: 18px;
-    color: #333;
-    margin-top: 20px;
-}
-
-/* Chart container styling */
-.chart-container {
-    margin-top: 30px;
-}
-
-/* Footer text styling */
+/* Footer with link styling */
 footer {
-    margin-top: 30px;
+    margin-top: 40px;
     text-align: center;
 }
 
-/* Ensure page is responsive */
-@media (max-width: 600px) {
-    .container {
-        width: 95%;
-        padding: 20px;
-    }
+footer a {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+footer a:hover {
+    text-decoration: underline;
 }
