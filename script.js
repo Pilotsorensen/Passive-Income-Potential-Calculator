@@ -1,6 +1,6 @@
 // Function to format numbers with spaces as the thousands separator
 function formatNumber(num) {
-    return num.toLocaleString('en', {useGrouping: true}).replace(/,/g, ' ');
+    return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ').replace('.', ',');
 }
 
 // Function to calculate compound growth
@@ -31,14 +31,14 @@ function calculateIncome() {
         annualROI *= 1.3;  // 30% more return for active involvement
     }
 
-    var months = 120;  // 10 years = 120 months
+    var years = 10;  // 10 years
     var growthData = [];
     var currentAmount = parseFloat(investmentAmount);
 
-    // Calculate monthly compounding over 120 months (10 years)
-    for (var i = 1; i <= months; i++) {
-        currentAmount *= (1 + annualROI / 12);  // Compounding monthly
-        growthData.push({ month: i, value: currentAmount.toFixed(2) });
+    // Calculate yearly compounding over 10 years
+    for (var i = 1; i <= years; i++) {
+        currentAmount *= (1 + annualROI);  // Compounding yearly
+        growthData.push({ year: i, value: currentAmount.toFixed(2) });
     }
 
     // Display the result as an estimate
@@ -49,16 +49,10 @@ function calculateIncome() {
     createGraph(growthData);
 }
 
-// Function to format numbers with spaces as the thousands separator
-function formatNumber(num) {
-    return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ').replace('.', ',');
-}
-
-
 // Function to create a graph using Chart.js
 function createGraph(growthData) {
     var ctx = document.getElementById('incomeChart').getContext('2d');
-    var labels = growthData.map(function(data) { return "Month " + data.month; });
+    var labels = growthData.map(function(data) { return "Year " + data.year; });
     var data = growthData.map(function(data) { return formatNumber(data.value); });
 
     var chart = new Chart(ctx, {
@@ -95,7 +89,7 @@ function createGraph(growthData) {
                     },
                     title: {
                         display: true,
-                        text: 'Months'
+                        text: 'Years'
                     }
                 },
                 y: {
