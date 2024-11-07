@@ -1,85 +1,98 @@
-function calculateIncome() {
-    const investmentInput = document.getElementById("investment").value;
-    const incomeStreamSelect = document.getElementById("incomeStream").value;
-    const involvementSelect = document.getElementById("involvement").value;
-    const timeframeInput = parseInt(document.getElementById("timeframe").value);
-
-    let roi;
-    if (incomeStreamSelect === "rentalProperties") roi = 0.05;
-    else if (incomeStreamSelect === "stockMarket") roi = 0.07;
-    else if (incomeStreamSelect === "onlineBusinesses") roi = 0.10;
-
-    const initialInvestment = parseFloat(investmentInput);
-    const growthData = [];
-    let amount = initialInvestment;
-
-    if (timeframeInput <= 5) {
-        // Monthly compounding for timeframes of 5 years or less
-        for (let month = 1; month <= timeframeInput * 12; month++) {
-            amount += amount * (roi / 12); // Monthly growth
-            growthData.push(amount.toFixed(2));
-        }
-    } else {
-        // Yearly compounding for timeframes over 5 years
-        for (let year = 1; year <= timeframeInput; year++) {
-            amount += amount * roi; // Yearly growth
-            growthData.push(amount.toFixed(2));
-        }
-    }
-
-    const formattedFinalAmount = amount.toLocaleString("en-US", { maximumFractionDigits: 2 });
-    document.getElementById("result").textContent = `Your investment will grow to $${formattedFinalAmount}`;
-
-    displayChart(growthData, timeframeInput);
+// Helper function to format numbers with thousand separators
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
-function displayChart(growthData, timeframeInput) {
-    const ctx = document.getElementById("incomeChart").getContext("2d");
+// Main calculation and graph update function
+function calculateIncome() {
+    const investment = parseFloat(document.getElementById("investment").value);
+    const incomeStream = document.getElementById("incomeStream").value;
+    const involvement = document.getElementById("involvement").value;
+    const timeframe = parseInt(document.getElementById("timeframe").value);
 
+    if (isNaN(investment) || investment <= 0) {
+        alert("Please enter a valid investment amount.");
+        return;
+    }
+
+    // Set the ROI based on income stream
+    let roi;
+    switch (incomeStream) {
+        case "rentalProperties":
+            roi = 0.05;
+            break;
+        case "stockMarket":
+            roi = 0.07;
+            break;
+        case "onlineBusinesses":
+            roi = 0.10;
+            break;
+        default:
+            roi = 0.05;
+    }
+
+    // Modify ROI based on involvement
+    if (involvement === "handsOff") roi *= 0.9;
+    if (involvement === "active") roi *= 1.1;
+
+    // Prepare data arrays for the chart
     const labels = [];
-    if (timeframeInput <= 5) {
-        // Monthly labels for shorter timeframes
-        for (let i = 1; i <= timeframeInput * 12; i++) {
-            labels.push(`Month ${i}`);
+    const data = [];
+    let accumulated = investment;
+
+    // Fill data based on timeframe and interval (months for <5 years, years otherwise)
+    if (timeframe < 5) {
+        for (let month = 1; month <= timeframe * 12; month++) {
+            accumulated *= (1 + roi / 12);  // Monthly compounding
+            labels.push(`Month ${month}`);
+            data.push(accumulated);
         }
     } else {
-        // Yearly labels for longer timeframes
-        for (let i = 1; i <= timeframeInput; i++) {
-            labels.push(`Year ${i}`);
+        for (let year = 1; year <= timeframe; year++) {
+            accumulated *= (1 + roi);  // Yearly compounding
+            labels.push(`Year ${year}`);
+            data.push(accumulated);
         }
     }
 
-    // Destroy existing chart if it exists
+    // Update result display with thousand-separated formatting
+    document.getElementById("result").innerHTML = `Your investment will grow to: $${formatNumber(accumulated.toFixed(2))}`;
+
+    // Update or create the chart
     if (window.incomeChart) {
-        window.incomeChart.destroy();
+        window.incomeChart.destroy(); // Destroy previous chart instance
     }
 
-    // Create a new chart
+    const ctx = document.getElementById("incomeChart").getContext("2d");
     window.incomeChart = new Chart(ctx, {
-        type: "line",
+        type: 'line',
         data: {
             labels: labels,
             datasets: [{
-                label: "Investment Growth Over Time",
-                data: growthData,
-                borderColor: "#4CAF50",
-                fill: false,
-                tension: 0.1
+                label: 'Projected Passive Income Growth',
+                data: data,
+                backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                borderColor: '#4CAF50',
+                borderWidth: 2,
+                pointRadius: 2,
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
             scales: {
                 x: {
                     title: {
                         display: true,
-                        text: timeframeInput <= 5 ? "Months" : "Years"
+                        text: timeframe < 5 ? 'Months' : 'Years'
                     }
                 },
                 y: {
                     title: {
                         display: true,
-                        text: "Investment Value ($)"
-                    }
+                        text: 'Investment Value ($)'
+                    },
+                    beginAtZero: false
                 }
             }
         }
