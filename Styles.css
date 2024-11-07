@@ -7,18 +7,19 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100vh; /* Full height of the screen */
 }
 
 /* Container for the form */
 .container {
     width: 100%;
-    max-width: 800px;   /* This limits the width of the calculator */
-    padding: 40px;      /* More padding around the content */
+    max-width: 800px;   /* Limits the width of the calculator */
+    padding: 40px;      /* Adds padding around the content */
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    margin: 20px;       /* Space around the container */
+    margin: 20px;       /* Adds space around the container */
+    border-top: 10px solid #4CAF50; /* Larger top border for emphasis */
 }
 
 /* Heading styles */
@@ -78,7 +79,7 @@ footer {
     text-align: center;
 }
 
-/* Make sure the page is responsive */
+/* Ensure page is responsive */
 @media (max-width: 600px) {
     .container {
         width: 95%;
