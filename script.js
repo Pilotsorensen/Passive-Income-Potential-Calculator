@@ -53,7 +53,7 @@ function calculateIncome() {
 function createGraph(growthData) {
     var ctx = document.getElementById('incomeChart').getContext('2d');
     var labels = growthData.map(function(data) { return "Year " + data.year; });
-    var data = growthData.map(function(data) { return formatNumber(data.value); });
+    var data = growthData.map(function(data) { return parseFloat(data.value); });
 
     var chart = new Chart(ctx, {
         type: 'line', // Line graph
